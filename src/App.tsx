@@ -21,7 +21,7 @@ function App() {
             <WhatsAppButton />
           </div>
         } />
-        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
     </Router>
