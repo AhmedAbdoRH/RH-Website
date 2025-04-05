@@ -10,7 +10,7 @@ export default function AdminDashboard() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  
   // Form states
   const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   const [newService, setNewService] = useState({
@@ -20,26 +20,26 @@ export default function AdminDashboard() {
     price: '',
     category_id: ''
   });
-
+  
   const navigate = useNavigate();
 
   useEffect(() => {
-    // checkAuth(); // Authentication check removed
+    checkAuth();
     fetchData();
   }, []);
 
-  // const checkAuth = async () => { // Authentication check removed
-  //   const { data: { session } } = await supabase.auth.getSession();
-  //   if (!session) {
-  //     navigate('/admin/login');
-  //   }
-  // };
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      navigate('/admin/login');
+    }
+  };
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       setError(null);
-
+      
       // Fetch categories
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('categories')
@@ -76,7 +76,7 @@ export default function AdminDashboard() {
         .insert([newCategory]);
 
       if (error) throw error;
-
+      
       setNewCategory({ name: '', description: '' });
       fetchData();
     } catch (err: any) {
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
         }]);
 
       if (error) throw error;
-
+      
       setNewService({
         title: '',
         description: '',
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
 
   const handleDeleteCategory = async (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذا القسم؟')) return;
-
+    
     try {
       setError(null);
       const { error } = await supabase
@@ -129,7 +129,7 @@ export default function AdminDashboard() {
 
   const handleDeleteService = async (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذه الخدمة؟')) return;
-
+    
     try {
       setError(null);
       const { error } = await supabase
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
           {/* Categories Management */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold mb-4">إدارة الأقسام</h2>
-
+            
             <form onSubmit={handleAddCategory} className="mb-6">
               <div className="space-y-4">
                 <input
@@ -232,7 +232,7 @@ export default function AdminDashboard() {
           {/* Services Management */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold mb-4">إدارة الخدمات</h2>
-
+            
             <form onSubmit={handleAddService} className="mb-6">
               <div className="space-y-4">
                 <select
