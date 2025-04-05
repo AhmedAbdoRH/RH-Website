@@ -24,16 +24,8 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkAuth();
     fetchData();
   }, []);
-
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      navigate('/admin/login');
-    }
-  };
 
   const fetchData = async () => {
     try {
@@ -144,11 +136,6 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/admin/login');
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -162,12 +149,6 @@ export default function AdminDashboard() {
       <div className="bg-white shadow">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">لوحة التحكم</h1>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            تسجيل خروج
-          </button>
         </div>
       </div>
 
@@ -266,51 +247,4 @@ export default function AdminDashboard() {
                   type="url"
                   placeholder="رابط الصورة"
                   value={newService.image_url}
-                  onChange={(e) => setNewService({ ...newService, image_url: e.target.value })}
-                  className="w-full p-2 border rounded"
-                />
-                <input
-                  type="text"
-                  placeholder="السعر"
-                  value={newService.price}
-                  onChange={(e) => setNewService({ ...newService, price: e.target.value })}
-                  className="w-full p-2 border rounded"
-                />
-                <button
-                  type="submit"
-                  className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 flex items-center justify-center gap-2"
-                >
-                  <Plus size={20} />
-                  إضافة خدمة جديدة
-                </button>
-              </div>
-            </form>
-
-            <div className="space-y-4">
-              {services.map((service) => (
-                <div key={service.id} className="border p-4 rounded">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">
-                        {service.category?.name}
-                      </div>
-                      <h3 className="font-bold">{service.title}</h3>
-                      <p className="text-gray-600">{service.description}</p>
-                      <p className="text-primary font-bold mt-2">{service.price}</p>
-                    </div>
-                    <button
-                      onClick={() => handleDeleteService(service.id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+                  onChange={(e) => setNewService({ ...newService, image_
