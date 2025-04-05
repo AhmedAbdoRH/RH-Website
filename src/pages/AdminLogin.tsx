@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('rehlathadaf@gmail.com');
-  const [password, setPassword] = useState('RHM@3333');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -15,9 +13,10 @@ export default function AdminLogin() {
       setIsLoading(true);
       setError('');
       
+      // تسجيل الدخول باستخدام بيانات الاعتماد الثابتة
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
+        email: 'rehlathadaf@gmail.com',
+        password: 'RHM@3333'
       });
 
       if (error) throw error;
@@ -39,32 +38,12 @@ export default function AdminLogin() {
           </div>
         )}
         <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">البريد الإلكتروني</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2">كلمة المرور</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
           <button
             type="submit"
             disabled={isLoading}
             className="w-full bg-primary text-white py-2 rounded hover:bg-opacity-90 disabled:opacity-50"
           >
-            {isLoading ? 'جاري تسجيل الدخول...' : 'دخول'}
+            {isLoading ? 'جاري تسجيل الدخول...' : 'الدخول إلى لوحة التحكم'}
           </button>
         </form>
       </div>
