@@ -5,11 +5,14 @@ export default function Header() {
   return (
     <header className="bg-white shadow-lg">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <img
-          src={logo} // Use the imported logo variable
-          alt="Logo"
-          className="h-12 w-12"
-        />
+        <div className="h-16 w-auto flex-shrink-0"> {/* حاوية أكبر للشعار */}
+          <img
+            src={logo} // Use the imported logo variable
+            alt="Logo"
+            className="h-full w-auto" // السماح بالتمدد النسبي
+            style={{ maxHeight: '100%', maxWidth: '100%' }} // قيود قصوى اختيارية
+          />
+        </div>
         <nav>
           <ul className="flex gap-6">
             <li><a href="#services" className="hover:text-primary">الخدمات التسويقية</a></li>
