@@ -10,7 +10,7 @@ export default function AdminDashboard() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Form states
   const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   const [newService, setNewService] = useState({
@@ -20,18 +20,26 @@ export default function AdminDashboard() {
     price: '',
     category_id: ''
   });
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
+    // checkAuth(); // Authentication check removed
     fetchData();
   }, []);
+
+  // const checkAuth = async () => { // Authentication check removed
+  //   const { data: { session } } = await supabase.auth.getSession();
+  //   if (!session) {
+  //     navigate('/admin/login');
+  //   }
+  // };
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Fetch categories
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('categories')
@@ -68,7 +76,7 @@ export default function AdminDashboard() {
         .insert([newCategory]);
 
       if (error) throw error;
-      
+
       setNewCategory({ name: '', description: '' });
       fetchData();
     } catch (err: any) {
@@ -88,7 +96,7 @@ export default function AdminDashboard() {
         }]);
 
       if (error) throw error;
-      
+
       setNewService({
         title: '',
         description: '',
@@ -104,7 +112,7 @@ export default function AdminDashboard() {
 
   const handleDeleteCategory = async (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذا القسم؟')) return;
-    
+
     try {
       setError(null);
       const { error } = await supabase
@@ -121,7 +129,7 @@ export default function AdminDashboard() {
 
   const handleDeleteService = async (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذه الخدمة؟')) return;
-    
+
     try {
       setError(null);
       const { error } = await supabase
@@ -134,6 +142,11 @@ export default function AdminDashboard() {
     } catch (err: any) {
       setError(err.message);
     }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/admin/login');
   };
 
   if (isLoading) {
@@ -149,6 +162,12 @@ export default function AdminDashboard() {
       <div className="bg-white shadow">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">لوحة التحكم</h1>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            تسجيل خروج
+          </button>
         </div>
       </div>
 
@@ -163,7 +182,7 @@ export default function AdminDashboard() {
           {/* Categories Management */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold mb-4">إدارة الأقسام</h2>
-            
+
             <form onSubmit={handleAddCategory} className="mb-6">
               <div className="space-y-4">
                 <input
@@ -213,7 +232,7 @@ export default function AdminDashboard() {
           {/* Services Management */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold mb-4">إدارة الخدمات</h2>
-            
+
             <form onSubmit={handleAddService} className="mb-6">
               <div className="space-y-4">
                 <select
@@ -247,4 +266,51 @@ export default function AdminDashboard() {
                   type="url"
                   placeholder="رابط الصورة"
                   value={newService.image_url}
-                  onChange={(e) => setNewService({ ...newService, image_
+                  onChange={(e) => setNewService({ ...newService, image_url: e.target.value })}
+                  className="w-full p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="السعر"
+                  value={newService.price}
+                  onChange={(e) => setNewService({ ...newService, price: e.target.value })}
+                  className="w-full p-2 border rounded"
+                />
+                <button
+                  type="submit"
+                  className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 flex items-center justify-center gap-2"
+                >
+                  <Plus size={20} />
+                  إضافة خدمة جديدة
+                </button>
+              </div>
+            </form>
+
+            <div className="space-y-4">
+              {services.map((service) => (
+                <div key={service.id} className="border p-4 rounded">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">
+                        {service.category?.name}
+                      </div>
+                      <h3 className="font-bold">{service.title}</h3>
+                      <p className="text-gray-600">{service.description}</p>
+                      <p className="text-primary font-bold mt-2">{service.price}</p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteService(service.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
