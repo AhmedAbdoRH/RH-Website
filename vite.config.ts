@@ -9,4 +9,5 @@ export default defineConfig({
   },
 });
 
-import { defineConfig } from 'vite'; export default defineConfig({ // other configurations assetsInclude: ['src/logo.png'] });
+import { defineConfig } from 'vite'; export default defineConfig({ 
+assetsInclude: ['src/logo.png'] });
