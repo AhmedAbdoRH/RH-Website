@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './src/logo.png'; // Import the logo from the scr folder
+import logo from './logo.png'; // Import the logo from the scr folder
 
 export default function Header() {
   return (
